@@ -5,8 +5,12 @@ import os
 from twilio.rest import Client
 from dotenv import load_dotenv
 
-load_dotenv() 
+from google.cloud import firestore
 
+# load env variables from .env file
+load_dotenv() 
+# connect db
+db = firestore.Client(project='clean-house-337521')
 
 # If `entrypoint` is not defined in app.yaml, App Engine will look for an app
 # called `app` in `main.py`.
@@ -30,11 +34,38 @@ def no():
 
     return 'Well go do it'
 
+@app.route('/adduser')
+def adduser():
+    doc_ref = db.collection(u'users').document(u'larswiersholm')
+    doc_ref.set({
+        u'first': u'Lars',
+        u'last': u'Wiersholm',
+        u'born': 1992
+    })
+    return "201"
+
+
+@app.route('/reset')
+def reset():
+    doc_ref = db.collection(u'users').document(u'alovelace')
+    doc_ref.set({
+        u'first': u'Ada',
+        u'last': u'Lovelace',
+        u'born': 1815
+    })
+    return "200"
+
 @app.route('/run_reminders')
 def run_reminders():
     # this is what the cron hits to kick off reminders
 
     # figure out what reminders we need to send by checking db
+    users_ref = db.collection(u'users')
+    docs = users_ref.stream()
+
+    print('users: ')
+    for doc in docs:
+        print(f'{doc.id} => {doc.to_dict()}')
 
     # send the reminders with twilio: 
     # To set up environmental variables, see http://twil.io/secure
