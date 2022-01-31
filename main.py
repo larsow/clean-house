@@ -1,5 +1,3 @@
-
-
 from flask import Flask
 import os
 from twilio.rest import Client
@@ -7,7 +5,6 @@ from dotenv import load_dotenv
 
 from google.cloud import firestore
 
-#test change
 # load env variables from .env file
 load_dotenv() 
 # connect db
@@ -16,7 +13,6 @@ db = firestore.Client(project='clean-house-337521')
 # If `entrypoint` is not defined in app.yaml, App Engine will look for an app
 # called `app` in `main.py`.
 app = Flask(__name__)
-
 
 @app.route('/')
 def hello():
@@ -32,7 +28,6 @@ def confirm():
 @app.route('/no')
 def no():
     # mark in db
-
     return 'Well go do it'
 
 @app.route('/adduser')
@@ -44,7 +39,6 @@ def adduser():
         u'born': 1992
     })
     return "201"
-
 
 @app.route('/reset')
 def reset():
@@ -83,10 +77,11 @@ def run_reminders():
     
     return "Sent message to lars"
 
-
-
 if __name__ == '__main__':
     # This is used when running locally only. When deploying to Google App
     # Engine, a webserver process such as Gunicorn will serve the app. You
     # can configure startup instructions by adding `entrypoint` to app.yaml.
     app.run(host='127.0.0.1', port=8080, debug=True)
+
+
+    
